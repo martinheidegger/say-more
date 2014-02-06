@@ -1,0 +1,29 @@
+{
+  "name": "say-more",
+  "version": "0.0.1",
+  "description": "TTL tool to let mac speak with finer accents.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "say-more": "./bin/say-more"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:martinheidegger/say-more.git"
+  },
+  "homepage": "https://github.com/martinheidegger/say-more",
+  "keywords": [
+    "voice-over",
+    "mac",
+    "speak",
+    "say"
+  ],
+  "author": "Martin Heidegger <martin.heidegger@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "async": "~0.2.10",
+    "yargs": "~1.0.12"
+  }
+}
