@@ -1,43 +1,56 @@
 #!/usr/bin/env node
+var sayMore = require("../index");
+if (process.stdin.isTTY) {
+	var fs = require("fs"),
+	    yargs = require("yargs")
+			.usage("say-more [option]")
+			.describe("file", "File input")
+			.describe("text", "Text input")
+			.describe("help", "Prints this help")
+			.describe("version", "Prints this version")
+			.example('say-more -t "[Alex] \\!You\\! ...  are ...  \\!\\!\\!Stupid\\!\\!\\! _are you not?_"')
+			.example('say-more -t "[Kathy] _yes, i am_ ... but I could be happy too."')
+			.example('say-more -f manylines.txt"')
+			.alias("f", "file")
+			.alias("h", "help")
+			.alias("v", "version")
+			.alias("t", "text"),
+		version = require(__dirname+"/../package.json").version,
+		argv = yargs.argv;
 
-var fs = require("fs"),
-	sayMore = require("../index"),
-    yargs = require("yargs")
-		.usage("say-more [option]")
-		.describe("file", "File input")
-		.describe("text", "Text input")
-		.describe("help", "Prints this help")
-		.describe("version", "Prints this version")
-		.example('say-more -t "[Alex] \\!You\\! ...  are ...  \\!\\!\\!Stupid\\!\\!\\! _are you not?_"')
-		.example('say-more -t "[Kathy] _yes, i am_ ... but I could be happy too."')
-		.example('say-more -f manylines.txt"')
-		.alias("f", "file")
-		.alias("h", "help")
-		.alias("v", "version")
-		.alias("t", "text"),
-	version = require(__dirname+"/../package.json").version,
-	argv = yargs.argv;
+	if (argv.help) {
+		yargs.showHelp();
+		return;
+	}
 
-if (argv.help) {
-	yargs.showHelp();
-	return;
-}
+	if (argv.version) {
+		console.info("sayMore "+version);
+		return;
+	}
 
-if (argv.version) {
-	console.info("sayMore "+version);
-	return;
-}
+	var text;
+	if (argv.f) {
+		text = fs.readFileSync(argv.f).toString(); 
+	} else {
+		text = argv.t
+	}
 
-var text;
-if (argv.f) {
-	text = fs.readFileSync(argv.f).toString(); 
+	if (text != undefined) {
+		sayMore(text);
+	} else {
+		console.error("No Text given.");
+		process.exit(1);
+	}
 } else {
-	text = argv.t
-}
+	var stdin = process.stdin,
+		queue = require("async").queue(function(text, callback) {
+			sayMore(text, callback);
+		}, 1);
 
-if (text != undefined) {
-	sayMore(text);
-} else {
-	console.error("No Text given.");
-	process.exit(1);
+	stdin.resume();
+	stdin.setEncoding('utf8');
+
+	stdin.on('data', function(chunk) {
+		queue.push(chunk);
+	});
 }
