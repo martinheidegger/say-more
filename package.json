@@ -1,6 +1,6 @@
 {
   "name": "say-more",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "TTL tool to let mac speak with finer accents.",
   "main": "index.js",
   "scripts": {

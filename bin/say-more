@@ -31,7 +31,7 @@ if (argv.version) {
 
 var text;
 
-if (argv.d || !process.stdin.isTTY) {
+if (argv.d) {
 	var stdin = process.stdin,
 		text = [],
 		queue = require("async").queue(function(text, callback) {
